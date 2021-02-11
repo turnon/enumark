@@ -1,8 +1,6 @@
 # Enumark
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/enumark`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+Enumerate chrome bookmark dump file
 
 ## Installation
 
@@ -22,7 +20,14 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Create the enumerator with path to your dump file:
+
+```ruby
+Enumark.new('/path/to/bookmark_dump_file').each do |e|
+  e.name
+  e.categories
+end
+```
 
 ## Development
 
