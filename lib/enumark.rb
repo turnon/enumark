@@ -26,11 +26,13 @@ class Enumark
   end
 
   class Item
-    attr_reader :name, :categories
+    attr_reader :name, :href, :categories
+
+    USELESS_SHARP = /\#.*$/
 
     def initialize(line, categories)
       m = line.match(ITEM_NAME)
-      @href = m[1]
+      @href = m[1].gsub(USELESS_SHARP, '')
       @add_date = m[2]
       @name = m[3]
       @categories = categories
@@ -43,6 +45,31 @@ class Enumark
     def to_s
       inspect
     end
+
+    def host
+      @host ||= (URI.parse(href).host rescue 'unknown')
+    end
+  end
+
+  class Hostname
+    attr_reader :name, :items
+
+    def initialize(name)
+      @name = name
+      @items = []
+    end
+
+    def add(item)
+      @items << item
+    end
+
+    def inspect
+      @name
+    end
+
+    def to
+      inspect
+    end
   end
 
   def initialize(file)
@@ -50,13 +77,27 @@ class Enumark
     @lock = Mutex.new
     @read = false
     @items = []
+
+    @hosts_lock = Mutex.new
+    @hosts = nil
   end
 
-  def each
-    return self unless block_given?
-
+  def each(&block)
     read_all_lines
-    @items.each { |item| yield item }
+    @items.each(&block)
+  end
+
+  def each_host(&block)
+    unless @hosts
+      @hosts_lock.synchronize do
+        next if @hosts
+        @hosts = each_with_object(Hash.new { |h, k| h[k] = Hostname.new(k) }) do |item, hash|
+          hash[item.host].add(item)
+        end
+      end
+    end
+
+    @hosts.each_value(&block)
   end
 
   private

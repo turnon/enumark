@@ -23,9 +23,18 @@ Or install it yourself as:
 Create the enumerator with path to your dump file:
 
 ```ruby
-Enumark.new('/path/to/bookmark_dump_file').each do |e|
-  e.name
-  e.categories
+enum = Enumark.new('/path/to/bookmark_dump_file')
+
+enum.each do |item|
+  item.name
+  item.href
+  item.host
+  item.categories
+end
+
+enum.each_host do |host|
+  host.name
+  host.items
 end
 ```
 
