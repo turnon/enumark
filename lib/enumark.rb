@@ -105,6 +105,7 @@ class Enumark
 
     @hosts = Grouping.new(self, :host)
     @dup_names = Grouping.new(self, :name){ |groups| groups.select{ |_, items| items.count > 1 } }
+    @dup_hrefs = Grouping.new(self, :href){ |groups| groups.select{ |_, items| items.count > 1 } }
   end
 
   def each(&block)
@@ -118,6 +119,10 @@ class Enumark
 
   def each_dup_name(&block)
     @dup_names.each(&block)
+  end
+
+  def each_dup_href(&block)
+    @dup_hrefs.each(&block)
   end
 
   private
