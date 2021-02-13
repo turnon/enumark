@@ -36,6 +36,16 @@ enum.each_host do |host|
   host.name
   host.items
 end
+
+enum.each_dup_title do |title|
+  title.name
+  title.items
+end
+
+enum.each_dup_href do |href|
+  href.name
+  href.items
+end
 ```
 
 ## Development
