@@ -72,14 +72,40 @@ class Enumark
     end
   end
 
+  class Grouping
+    Group = Struct.new(:name, :items)
+
+    def initialize(enumark, key, &post)
+      @lock = Mutex.new
+      @collection = nil
+
+      @enumark = enumark
+      @key = key
+      @post = post
+    end
+
+    def each(&block)
+      unless @collection
+        @lock.synchronize do
+          @collection = @enumark.group_by(&@key)
+          @collection = @post.call(@collection) if @post
+          @collection = @collection.map{ |k, items| Group.new(k, items) }
+        end
+      end
+
+      @collection.each(&block)
+    end
+  end
+
   def initialize(file)
     @file = file
     @lock = Mutex.new
     @read = false
     @items = []
 
-    @hosts_lock = Mutex.new
-    @hosts = nil
+    @hosts = Grouping.new(self, :host)
+    @dup_titles = Grouping.new(self, :name){ |groups| groups.select{ |_, items| items.count > 1 } }
+    @dup_hrefs = Grouping.new(self, :href){ |groups| groups.select{ |_, items| items.count > 1 } }
   end
 
   def each(&block)
@@ -88,16 +114,15 @@ class Enumark
   end
 
   def each_host(&block)
-    unless @hosts
-      @hosts_lock.synchronize do
-        next if @hosts
-        @hosts = each_with_object(Hash.new { |h, k| h[k] = Hostname.new(k) }) do |item, hash|
-          hash[item.host].add(item)
-        end
-      end
-    end
+    @hosts.each(&block)
+  end
 
-    @hosts.each_value(&block)
+  def each_dup_title(&block)
+    @dup_titles.each(&block)
+  end
+
+  def each_dup_href(&block)
+    @dup_hrefs.each(&block)
   end
 
   private
