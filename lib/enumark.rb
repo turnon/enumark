@@ -104,6 +104,7 @@ class Enumark
     @items = []
 
     @hosts = Grouping.new(self, :host)
+    @dup_names = Grouping.new(self, :name){ |groups| groups.select{ |_, items| items.count > 1 } }
   end
 
   def each(&block)
@@ -113,6 +114,10 @@ class Enumark
 
   def each_host(&block)
     @hosts.each(&block)
+  end
+
+  def each_dup_name(&block)
+    @dup_names.each(&block)
   end
 
   private
