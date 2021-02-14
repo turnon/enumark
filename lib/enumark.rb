@@ -39,7 +39,11 @@ class Enumark
     end
 
     def inspect
-      @inspect ||= "/#{categories.join('/')}> #{name}"
+      @inspect ||= "#{categories_str}> #{name}"
+    end
+
+    def categories_str
+      @categories_str ||= "/#{categories.join('/')}"
     end
 
     def to_s
@@ -106,6 +110,7 @@ class Enumark
     @hosts = Grouping.new(self, :host)
     @dup_titles = Grouping.new(self, :name){ |groups| groups.select{ |_, items| items.count > 1 } }
     @dup_hrefs = Grouping.new(self, :href){ |groups| groups.select{ |_, items| items.count > 1 } }
+    @cates = Grouping.new(self, :categories_str)
   end
 
   def each(&block)
@@ -123,6 +128,10 @@ class Enumark
 
   def each_dup_href(&block)
     @dup_hrefs.each(&block)
+  end
+
+  def each_category(&block)
+    @cates.each(&block)
   end
 
   private
