@@ -55,27 +55,6 @@ class Enumark
     end
   end
 
-  class Hostname
-    attr_reader :name, :items
-
-    def initialize(name)
-      @name = name
-      @items = []
-    end
-
-    def add(item)
-      @items << item
-    end
-
-    def inspect
-      @name
-    end
-
-    def to
-      inspect
-    end
-  end
-
   class Grouping
     Group = Struct.new(:name, :items)
 
