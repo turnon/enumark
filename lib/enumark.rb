@@ -32,10 +32,10 @@ class Enumark
     end
   end
 
-  def initialize(file)
+  def initialize(file, items: nil)
     @file = file
     @lock = Mutex.new
-    @items = nil
+    @items = items
 
     @hosts = Grouping.new(self, :host)
     @dup_titles = Grouping.new(self, :name){ |groups| groups.select{ |_, items| items.count > 1 } }
@@ -62,6 +62,15 @@ class Enumark
 
   def each_category(&block)
     @cates.each(&block)
+  end
+
+  [:+ ,:-, :&, :|].each do |op|
+    class_eval <<-EOM
+      def #{op}(another)
+        new_items = self.to_a #{op} another.to_a
+        Enumark.new(nil, items: new_items)
+      end
+    EOM
   end
 
   private

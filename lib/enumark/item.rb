@@ -29,6 +29,14 @@ class Enumark
       inspect
     end
 
+    def hash
+      href.hash
+    end
+
+    def eql?(another)
+      href.eql?(another.href)
+    end
+
     def host
       @host ||= (URI.parse(href).host rescue 'unknown')
     end
