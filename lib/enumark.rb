@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative "enumark/version"
+require 'enumark/item'
 
 class Enumark
   include Enumerable
@@ -8,9 +9,6 @@ class Enumark
   CATEGORY_START = /^\s.*<DT><H3/
   CATEGORY_END = /^\s.*<\/DL><p>/
   CATEGORY_NAME = /ADD_DATE="(.*?)".*LAST_MODIFIED="(.*?)".*>(.*)<\/H3/
-
-  ITEM_PREFIX = /^\s.*<DT><A/
-  ITEM_NAME = /HREF="(.*?)".*ADD_DATE="(.*?)".*>(.*)<\/A>/
 
   class Category
     attr_reader :name
@@ -22,36 +20,6 @@ class Enumark
       @add_date = m[1]
       @last_mod = m[2]
       @name = m[3]
-    end
-  end
-
-  class Item
-    attr_reader :name, :href, :categories
-
-    USELESS_SHARP = /\#.*$/
-
-    def initialize(line, categories)
-      m = line.match(ITEM_NAME)
-      @href = m[1].gsub(USELESS_SHARP, '')
-      @add_date = m[2]
-      @name = m[3]
-      @categories = categories
-    end
-
-    def inspect
-      @inspect ||= "#{categories_str}> #{name}"
-    end
-
-    def categories_str
-      @categories_str ||= "/#{categories.join('/')}"
-    end
-
-    def to_s
-      inspect
-    end
-
-    def host
-      @host ||= (URI.parse(href).host rescue 'unknown')
     end
   end
 
@@ -128,7 +96,7 @@ class Enumark
 
     File.new(@file).each do |line|
       case line
-      when ITEM_PREFIX
+      when Item::PREFIX
         item = Item.new(line, categories.dup)
         @items.push(item)
       when CATEGORY_START
