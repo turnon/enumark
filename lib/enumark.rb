@@ -83,8 +83,7 @@ class Enumark
   def initialize(file)
     @file = file
     @lock = Mutex.new
-    @read = false
-    @items = []
+    @items = nil
 
     @hosts = Grouping.new(self, :host)
     @dup_titles = Grouping.new(self, :name){ |groups| groups.select{ |_, items| items.count > 1 } }
@@ -116,18 +115,16 @@ class Enumark
   private
 
   def read_all_lines
-    return if @read
+    return if @items
 
     @lock.synchronize do
-      next if @read
-
-      _read_all_lines
-      @read = true
+      _read_all_lines unless @items
     end
   end
 
   def _read_all_lines
     categories = []
+    @items = []
 
     File.new(@file).each do |line|
       case line
