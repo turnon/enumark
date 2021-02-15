@@ -2,26 +2,10 @@
 
 require_relative "enumark/version"
 require 'enumark/item'
+require 'enumark/category'
 
 class Enumark
   include Enumerable
-
-  CATEGORY_START = /^\s.*<DT><H3/
-  CATEGORY_END = /^\s.*<\/DL><p>/
-  CATEGORY_NAME = /ADD_DATE="(.*?)".*LAST_MODIFIED="(.*?)".*>(.*)<\/H3/
-
-  class Category
-    attr_reader :name
-    alias_method :inspect, :name
-    alias_method :to_s, :name
-
-    def initialize(line)
-      m = line.match(CATEGORY_NAME)
-      @add_date = m[1]
-      @last_mod = m[2]
-      @name = m[3]
-    end
-  end
 
   class Grouping
     Group = Struct.new(:name, :items)
@@ -99,9 +83,9 @@ class Enumark
       when Item::PREFIX
         item = Item.new(line, categories.dup)
         @items.push(item)
-      when CATEGORY_START
+      when Category::START
         categories.push(Category.new(line))
-      when CATEGORY_END
+      when Category::ENDIND
         categories.pop
       end
     end
