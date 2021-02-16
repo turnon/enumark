@@ -53,6 +53,17 @@ enum.each_category do |cate|
 end
 ```
 
+Explore trends of your dump files:
+
+```ruby
+dir = Enumark::Dir.new('/path/to/directory_with_bookmark_dump_files_more_than_one')
+
+dir.added # select items in last file but not in second to last
+dir.deleted # reject items in last file
+dir.uniq # union all items
+dir.static # select items appear in all files
+```
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.

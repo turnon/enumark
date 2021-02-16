@@ -4,6 +4,7 @@ require_relative "enumark/version"
 require 'enumark/item'
 require 'enumark/category'
 require 'enumark/grouping'
+require 'enumark/dir'
 
 class Enumark
   include Enumerable
