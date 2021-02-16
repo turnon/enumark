@@ -21,6 +21,7 @@ class Enumark
 
   def each(&block)
     read_all_lines
+    sort_by_add_date!
     @items.each(&block)
   end
 
@@ -73,6 +74,17 @@ class Enumark
       when Category::ENDIND
         categories.pop
       end
+    end
+  end
+
+  def sort_by_add_date!
+    return if @sorted
+
+    @lock.synchronize do
+      next if @sorted
+
+      @items.sort!{ |i1, i2| i2.add_date <=> i1.add_date }
+      @sorted = true
     end
   end
 end
