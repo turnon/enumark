@@ -67,6 +67,12 @@ dir.static # select items appear in all files
 dir.all # enumerator of all items in all files
 ```
 
+Set config
+
+```ruby
+Enumark::Config.set(logger: STDOUT)
+```
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.

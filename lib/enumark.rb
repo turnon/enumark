@@ -5,6 +5,7 @@ require 'enumark/item'
 require 'enumark/category'
 require 'enumark/grouping'
 require 'enumark/dir'
+require 'enumark/config'
 
 class Enumark
   include Enumerable
