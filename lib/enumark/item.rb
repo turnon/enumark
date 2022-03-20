@@ -7,9 +7,10 @@ class Enumark
     PATTERN = /HREF="(.*?)".*ADD_DATE="(.*?)".*>(.*)<\/A>/
     USELESS_SHARP = /\#.*$/
 
-    attr_reader :name, :href, :add_date, :categories
+    attr_reader :dump_date, :name, :href, :add_date, :categories
 
-    def initialize(line, categories)
+    def initialize(dump_date, line, categories)
+      @dump_date = dump_date
       m = line.match(PATTERN)
       @href = m[1].gsub(USELESS_SHARP, '')
       @add_date = Time.at(m[2].to_i)

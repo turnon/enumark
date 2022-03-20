@@ -27,6 +27,7 @@ enum = Enumark.new('/path/to/bookmark_dump_file')
 
 enum.each do |item|
   item.name
+  item.dump_date
   item.add_date
   item.href
   item.host

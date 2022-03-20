@@ -62,13 +62,14 @@ class Enumark
   end
 
   def _read_all_lines
+    dump_date = Pathname.new(@file).basename('.html').to_s
     categories = []
     @items = []
 
     File.new(@file).each do |line|
       case line
       when Item::PREFIX
-        item = Item.new(line, categories.dup)
+        item = Item.new(dump_date, line, categories.dup)
         @items.push(item)
       when Category::START
         categories.push(Category.new(line))
