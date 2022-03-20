@@ -22,5 +22,15 @@ class Enumark
     def static
       @static ||= @enumarks.reverse_each.reduce(&:&)
     end
+
+    def all
+      Enumerator.new do |yielder|
+        @enumarks.each do |enum|
+          enum.each do |item|
+            yielder << item
+          end
+        end
+      end
+    end
   end
 end

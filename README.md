@@ -63,6 +63,7 @@ dir.added # select items in last file but not in second to last
 dir.deleted # reject items in last file
 dir.uniq # union all items
 dir.static # select items appear in all files
+dir.all # enumerator of all items in all files
 ```
 
 ## Development
