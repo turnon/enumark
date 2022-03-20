@@ -27,6 +27,8 @@ enum = Enumark.new('/path/to/bookmark_dump_file')
 
 enum.each do |item|
   item.name
+  item.dump_date
+  item.add_date
   item.href
   item.host
   item.categories
@@ -62,6 +64,13 @@ dir.added # select items in last file but not in second to last
 dir.deleted # reject items in last file
 dir.uniq # union all items
 dir.static # select items appear in all files
+dir.all # enumerator of all items in all files
+```
+
+Set config
+
+```ruby
+Enumark::Config.set(logger: STDOUT)
 ```
 
 ## Development

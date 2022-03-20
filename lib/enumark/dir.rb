@@ -22,5 +22,21 @@ class Enumark
     def static
       @static ||= @enumarks.reverse_each.reduce(&:&)
     end
+
+    def all
+      Enumerator.new do |yielder|
+        logger = Config.get(:logger)
+        file_count = @enumarks.count
+
+        @enumarks.each_with_index do |enum, idx|
+          enum.each do |item|
+            yielder << item
+            logger.printf("--> %6d/%-6d = %3f \r", idx + 1, file_count, ((idx + 1).to_f / file_count * 100).round(2)) if logger
+          end
+        end
+
+        logger.puts if logger
+      end
+    end
   end
 end
