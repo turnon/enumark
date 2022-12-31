@@ -55,6 +55,12 @@ enum.each_category do |cate|
 end
 ```
 
+Sort category by capacity
+
+```ruby
+enum.each_category.map{ |cate| [cate.items.count, cate.name] }.sort
+```
+
 Explore trends of your dump files:
 
 ```ruby
